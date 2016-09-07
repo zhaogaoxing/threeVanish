@@ -29,7 +29,20 @@ private:
 	Animal* createAnimal(int x, int y); // 根据坐标创建一个动物
 	bool isAnimalLegal(Animal* animal, int x, int y); // 判断创建的动物是否合法
 
+	//关于操作动物的方法
+	void swapAnimals(Animal *animalA, Animal *animalB);//交换两个动物
+	void swapAnimalToNewPos(Animal* animal); //移动到新的位置
 
+	// 事件响应部分
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
+
+
+
+
+
+	//// 捕捉函数，捕捉消除步骤是否完成
+	//void onAnimalsSwaping(float dt);
 
 public:
 	static AnimalGrid* create(int row, int col);
