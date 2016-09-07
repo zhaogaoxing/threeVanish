@@ -37,12 +37,20 @@ private:
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
 
-
+	// 游戏逻辑部分
+	bool canCrush(); // 判断当前状态的动物阵列是否能消除
+	void goCrush(); // 开始消除
 
 
 
 	//// 捕捉函数，捕捉消除步骤是否完成
-	//void onAnimalsSwaping(float dt);
+	void onAnimalsSwaping(float dt);
+
+
+	void singeAnimal(Animal* animal); // 判断单个动物
+	void specialSinged(Animal* animal);
+	bool checkGridClean();
+
 
 public:
 	static AnimalGrid* create(int row, int col);
