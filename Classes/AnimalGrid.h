@@ -2,10 +2,12 @@
 #define __ANIMAL_GRID_H__
 
 #include "cocos2d.h"
+
 #include "SimpleAudioEngine.h"
+#include "Animal.h"
 #include "SystemHeader.h"
 #include <vector>
-#include "Animal.h"
+
 
 USING_NS_CC;
 using namespace std;
@@ -22,8 +24,6 @@ private:
 	Vector<Animal*> m_crushAnimalGrid; // 准备消除的动物容器
 	Vector<Animal*> m_newAnimalGrid; // 准备加入布局的动物容器
 
-	Vector<Animal*> m_crushAnimalH;
-	Vector<Animal*> m_crushAnimalV;
 
 	// 关于创建动物的方法
 	Animal* createAnimal(int x, int y); // 根据坐标创建一个动物
@@ -41,15 +41,16 @@ private:
 	bool canCrush(); // 判断当前状态的动物阵列是否能消除
 	void goCrush(); // 开始消除
 
+	void refreshAnimalGrid(); // 刷新消除后的动物阵列
+	void refreshAnimalsToNewPos(int col); // 刷新一列动物
 
-
-	//// 捕捉函数，捕捉消除步骤是否完成
+	// 捕捉函数，捕捉消除步骤是否完成
 	void onAnimalsSwaping(float dt);
+	//void onAnimalsSwapingBack(float dt);
+	//void onAnimalsCrushing(float dt);
+	//void onAnimalsRefreshing(float dt);
 
 
-	void singeAnimal(Animal* animal); // 判断单个动物
-	void specialSinged(Animal* animal);
-	bool checkGridClean();
 
 
 public:
