@@ -421,85 +421,85 @@ void AnimalGrid::goCrush()
 	}
 }
 
-//// 刷新布局
-//void AnimalGrid::refreshAnimalGrid()
-//{
-//	// 遍历列，如果该列有空位，那么应当刷新
-//	for (int x = 0; x < m_col; x++)
-//	{
-//		int empty_count = 0; // 一列总的空格子数
-//
-//		for (int y = 0; y < m_row; y++)
-//		{
-//			// 根据坐标索引动物盒子内的动物指针，如果为空，那么说明该坐标位置为空
-//			auto animal = m_AnimalGrid[x][y];
-//			if (!animal)
-//			{
-//				empty_count++;
-//			}
-//		}
-//
-//		if (empty_count)
-//		{
-//			// 找到有空位的列，刷新该列的动物
-//			refreshAnimalsToNewPos(x);
-//		}
-//	}
-//}
-//
-//// 动物掉落
-//void AnimalGrid::refreshAnimalsToNewPos(int col)
-//{
-//	// 刷新该列上面的动物
-//	int n = 0; // 当前遍历到的空位数
-//	auto p_animalBox = &m_AnimalGrid; // 保存一个动物盒子的指针，这是为了让其能传入lamda
-//
-//	// 先让现有的动物下落
-//	for (int y = 0; y < m_row; y++)
-//	{
-//		auto animal = m_AnimalGrid[col][y];
-//
-//		if (!animal)
-//		{
-//			n++;
-//			continue;
-//		}
-//		else if (n != 0)
-//		{
-//			animal->setY(animal->getY() - n);
-//			auto move = MoveBy::create(0.2, Vec2(0, -n*GRID_WIDTH));
-//			auto call = CallFunc::create([p_animalBox, animal](){
-//				// 更新动物盒子内的数据
-//				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
-//			});
-//
-//			animal->runAction(Sequence::create(move, call, nullptr));
-//		}
-//	}
-//
-//	// 再让新动物下落
-//	int i = n;
-//	int delta = 1;
-//
-//	for (auto animal : m_newAnimalGrid)
-//	{
-//		if (animal->getX() == col)
-//		{
-//			animal->setY(m_row - i);
-//
-//			auto delay = DelayTime::create(0.2);
-//			// 后下落的速度设置慢一些
-//			auto move = MoveBy::create(0.2*delta++, Vec2(0, -i--*GRID_WIDTH));
-//			auto call = CallFunc::create([animal, p_animalBox, this](){
-//				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
-//				// 从新动物盒子中移除该动物
-//				m_newAnimalGrid.eraseObject(animal);
-//			});
-//
-//			animal->runAction(Sequence::create(delay, move, call, nullptr));
-//		}
-//	}
-//}
+// 刷新布局
+void AnimalGrid::refreshAnimalGrid()
+{
+	// 遍历列，如果该列有空位，那么应当刷新
+	for (int x = 0; x < m_col; x++)
+	{
+		int empty_count = 0; // 一列总的空格子数
+
+		for (int y = 0; y < m_row; y++)
+		{
+			// 根据坐标索引动物盒子内的动物指针，如果为空，那么说明该坐标位置为空
+			auto animal = m_AnimalGrid[x][y];
+			if (!animal)
+			{
+				empty_count++;
+			}
+		}
+
+		if (empty_count)
+		{
+			// 找到有空位的列，刷新该列的动物
+			refreshAnimalsToNewPos(x);
+		}
+	}
+}
+
+// 动物掉落
+void AnimalGrid::refreshAnimalsToNewPos(int col)
+{
+	// 刷新该列上面的动物
+	int n = 0; // 当前遍历到的空位数
+	auto p_animalBox = &m_AnimalGrid; // 保存一个动物盒子的指针，这是为了让其能传入lamda
+
+	// 先让现有的动物下落
+	for (int y = 0; y < m_row; y++)
+	{
+		auto animal = m_AnimalGrid[col][y];
+
+		if (!animal)
+		{
+			n++;
+			continue;
+		}
+		else if (n != 0)
+		{
+			animal->setY(animal->getY() - n);
+			auto move = MoveBy::create(0.2, Vec2(0, -n*GRID_WIDTH));
+			auto call = CallFunc::create([p_animalBox, animal](){
+				// 更新动物盒子内的数据
+				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
+			});
+
+			animal->runAction(Sequence::create(move, call, nullptr));
+		}
+	}
+
+	// 再让新动物下落
+	int i = n;
+	int delta = 1;
+
+	for (auto animal : m_newAnimalGrid)
+	{
+		if (animal->getX() == col)
+		{
+			animal->setY(m_row - i);
+
+			auto delay = DelayTime::create(0.2);
+			// 后下落的速度设置慢一些
+			auto move = MoveBy::create(0.2*delta++, Vec2(0, -i--*GRID_WIDTH));
+			auto call = CallFunc::create([animal, p_animalBox, this](){
+				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
+				// 从新动物盒子中移除该动物
+				m_newAnimalGrid.eraseObject(animal);
+			});
+
+			animal->runAction(Sequence::create(delay, move, call, nullptr));
+		}
+	}
+}
 //
 // 捕捉交换状态
 void AnimalGrid::onAnimalsSwaping(float dt)
@@ -521,109 +521,109 @@ void AnimalGrid::onAnimalsSwaping(float dt)
 
 			SimpleAudioEngine::getInstance()->playEffect("cursh.mp3");
 			goCrush();
-			/*this->schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));*/
+			this->schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
 		}
-		//else
-		//{
-		//	// 不能消除，交换回去，开启交换返回时的捕捉函数
-		//	swapAnimals(m_animalSelected, m_animalSwapped);
-		//	this->schedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack));
-		//}
+		else
+		{
+			// 不能消除，交换回去，开启交换返回时的捕捉函数
+			swapAnimals(m_animalSelected, m_animalSwapped);
+			this->schedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack));
+		}
 	}
 }
-//
-//// 复位
-//void AnimalGrid::onAnimalsSwapingBack(float dt)
-//{
-//	// 捕捉两个正在交换的动物的交换动作是否已经停止，如果没停止，返回继续捕捉
-//	if (m_animalSelected->isSwaping() || m_animalSwapped->isSwaping())
-//	{
-//		return;
-//	}
-//	else
-//	{
-//		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack)); // 停止捕捉
-//
-//		m_animalSelected = nullptr;
-//
-//		_eventDispatcher->resumeEventListenersForTarget(this); // 重新开始触摸监听
-//	}
-//}
-//
-//void AnimalGrid::onAnimalsCrushing(float dt)
-//{
-//	// 捕捉动物消除状态，如果有动物还在消除，那么继续捕捉
-//	for (auto animal : m_crushAnimalGrid)
-//	{
-//		if (animal->isCrushing())
-//		{
-//			return;
-//		}
-//	}
-//
-//	// 如果全部动物已经消除完毕，停止捕捉函数
-//	unschedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
-//
-//	// 清空消除动物盒子
-//	m_crushAnimalGrid.clear();
-//
-//	// 刷新动物阵列，并开启刷新状态捕捉函数
-//	refreshAnimalGrid();
-//	this->schedule(schedule_selector(AnimalGrid::onAnimalsRefreshing));
-//}
-//
-//void AnimalGrid::onAnimalsRefreshing(float dt)
-//{
-//	// 捕捉动物刷新状态，如果新动物盒子还有动物，那么继续捕捉
-//	if (m_newAnimalGrid.size() != 0)
-//	{
-//		return;
-//	}
-//	else
-//	{
-//		unschedule(schedule_selector(AnimalGrid::onAnimalsRefreshing));
-//
-//		if (canCrush())
-//		{
-//			// 如果能消除，那么继续消除
-//			goCrush();
-//			this->schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
-//		}
-//		else
-//		{
-//
-//			// 判断是否为死图，如果是，提示即将更新地图
-//			if (isDeadMap())
-//			{
-//				auto winSize = Director::getInstance()->getWinSize();
-//				auto label = Label::createWithTTF("Cant Crush Any More, Change!", "fonts/Marker Felt.ttf", 24);
-//				label->setTextColor(Color4B::BLACK);
-//				label->setPosition(winSize.width / 2, winSize.height / 2);
-//				label->setOpacity(0);
-//				this->getParent()->addChild(label, 3);
-//
-//				// 提示文字淡入淡出后，更新地图，再开启触摸监听
-//				auto fadein = FadeIn::create(0.5);
-//				auto fadeout = FadeOut::create(0.5);
-//
-//				auto call = CallFunc::create([this, label](){
-//					do
-//					{
-//						updateMap();
-//					} while (isDeadMap());
-//
-//					label->removeFromParent();
-//
-//					_eventDispatcher->resumeEventListenersForTarget(this);
-//				});
-//
-//				label->runAction(Sequence::create(fadein, DelayTime::create(2), fadeout, call, nullptr));
-//			}
-//			else
-//			{
-//				// 如果不是死图，那么就直接开启触摸监听，等待下一轮的交互操作
-//				_eventDispatcher->resumeEventListenersForTarget(this);
-//			}
-//		}
-//	}
-//}
+
+// 复位
+void AnimalGrid::onAnimalsSwapingBack(float dt)
+{
+	// 捕捉两个正在交换的动物的交换动作是否已经停止，如果没停止，返回继续捕捉
+	if (m_animalSelected->isSwaping() || m_animalSwapped->isSwaping())
+	{
+		return;
+	}
+	else
+	{
+		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack)); // 停止捕捉
+
+		m_animalSelected = nullptr;
+
+		_eventDispatcher->resumeEventListenersForTarget(this); // 重新开始触摸监听
+	}
+}
+
+void AnimalGrid::onAnimalsCrushing(float dt)
+{
+	// 捕捉动物消除状态，如果有动物还在消除，那么继续捕捉
+	for (auto animal : m_crushAnimalGrid)
+	{
+		if (animal->isCrushing())
+		{
+			return;
+		}
+	}
+
+	// 如果全部动物已经消除完毕，停止捕捉函数
+	unschedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
+
+	// 清空消除动物盒子
+	m_crushAnimalGrid.clear();
+
+	// 刷新动物阵列，并开启刷新状态捕捉函数
+	refreshAnimalGrid();
+	this->schedule(schedule_selector(AnimalGrid::onAnimalsRefreshing));
+}
+
+void AnimalGrid::onAnimalsRefreshing(float dt)
+{
+	// 捕捉动物刷新状态，如果新动物盒子还有动物，那么继续捕捉
+	if (m_newAnimalGrid.size() != 0)
+	{
+		return;
+	}
+	else
+	{
+		unschedule(schedule_selector(AnimalGrid::onAnimalsRefreshing));
+
+		if (canCrush())
+		{
+			// 如果能消除，那么继续消除
+			goCrush();
+			this->schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
+		}
+		else
+		{
+
+			// 判断是否为死图，如果是，提示即将更新地图
+			if (isDeadMap())
+			{
+				auto winSize = Director::getInstance()->getWinSize();
+				auto label = Label::createWithTTF("Cant Crush Any More, Change!", "fonts/Marker Felt.ttf", 24);
+				label->setTextColor(Color4B::BLACK);
+				label->setPosition(winSize.width / 2, winSize.height / 2);
+				label->setOpacity(0);
+				this->getParent()->addChild(label, 3);
+
+				// 提示文字淡入淡出后，更新地图，再开启触摸监听
+				auto fadein = FadeIn::create(0.5);
+				auto fadeout = FadeOut::create(0.5);
+
+				auto call = CallFunc::create([this, label](){
+					do
+					{
+						updateMap();
+					} while (isDeadMap());
+
+					label->removeFromParent();
+
+					_eventDispatcher->resumeEventListenersForTarget(this);
+				});
+
+				label->runAction(Sequence::create(fadein, DelayTime::create(2), fadeout, call, nullptr));
+			}
+			else
+			{
+				// 如果不是死图，那么就直接开启触摸监听，等待下一轮的交互操作
+				_eventDispatcher->resumeEventListenersForTarget(this);
+			}
+		}
+	}
+}

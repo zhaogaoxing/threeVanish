@@ -46,9 +46,9 @@ private:
 
 	// 捕捉函数，捕捉消除步骤是否完成
 	void onAnimalsSwaping(float dt);
-	//void onAnimalsSwapingBack(float dt);
-	//void onAnimalsCrushing(float dt);
-	//void onAnimalsRefreshing(float dt);
+	void onAnimalsSwapingBack(float dt);
+	void onAnimalsCrushing(float dt);
+	void onAnimalsRefreshing(float dt);
 
 
 
