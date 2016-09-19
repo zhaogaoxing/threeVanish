@@ -9,6 +9,8 @@
 #include "SystemHeader.h"
 #include "AnimalGrid.h"
 
+using namespace ui;
+
 class GameLayer :public cocos2d::Layer
 {
 public:
@@ -25,6 +27,13 @@ public:
 private:
 	AnimalGrid* m_AnimalGrid;
 	
+	static LoadingBar* m_bonusbar;//计时条
+
+
+
+	void onReducingBonus(float dt);//开启倒计时
+
+
 };
 
 #endif
