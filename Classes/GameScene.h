@@ -21,6 +21,8 @@ public:
 	virtual void onEnterTransitionDidFinish();
 	virtual void onExit();
 
+	static void addBonus(int bonus);
+
 
 	CREATE_FUNC(GameLayer);
 
@@ -29,10 +31,11 @@ private:
 	
 	static LoadingBar* m_bonusbar;//计时条
 
-
+	static Label* m_scorelabel;
+	static int m_score; // 分数
 
 	void onReducingBonus(float dt);//开启倒计时
-
+	void publishScore(); // 存储游戏分数
 
 };
 
