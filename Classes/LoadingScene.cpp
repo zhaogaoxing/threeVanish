@@ -54,13 +54,14 @@ bool LoadingLayer::init()
 	TextureCache::getInstance()->addImageAsync("texture/bonusbar.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/bonusbar_fill.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/gameover.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/home.png", addTextureCallback);
 
 	//开启加载进度检测
 	this->schedule(schedule_selector(LoadingLayer::onTextureLoading));
 
 	//预加载音效
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("BGM.mp3");
-
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("WBGM.mp3");
 	SimpleAudioEngine::getInstance()->preloadEffect("cursh.mp3");
 
 	return true;
@@ -69,12 +70,12 @@ bool LoadingLayer::init()
 void LoadingLayer::onTextureLoading(float dt)
 {
 	//一旦加载图片完毕，那么进入游戏场景
-	if (m_texture_num == 14)
+	if (m_texture_num == 15)
 	{
 		this->unschedule(schedule_selector(LoadingLayer::onTextureLoading));
 
 		auto call = CallFunc::create([](){
-			auto scene = GameLayer::createScene();
+			auto scene = HomeLayer::createScene();
 			Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
 		});
 

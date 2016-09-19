@@ -5,6 +5,7 @@
 #include "SimpleAudioEngine.h"
 
 #include "GameScene.h"
+#include "HomeScene.h"
 
 
 class LoadingLayer : public cocos2d::Layer
