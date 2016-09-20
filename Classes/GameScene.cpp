@@ -68,6 +68,14 @@ bool GameLayer::init()
 	m_scorelabel->enableOutline(Color4B::BLACK, 1);
 	this->addChild(m_scorelabel, 1);
 
+	//初始化暂停按钮
+	auto pauseSprite = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/pause.png"));
+	auto pauseMenuItem = MenuItemSprite::create(pauseSprite, pauseSprite, CC_CALLBACK_1(GameLayer::menuPauseCallback, this));
+	auto pauseMenu = Menu::create(pauseMenuItem, NULL);
+	pauseMenu->setPosition(Vec2(40, visibleSize.height - 28));
+	this->addChild(pauseMenu, 20);
+
+
 
 	return true;
 }
@@ -97,6 +105,9 @@ void GameLayer::onReducingBonus(float dt)
 		this->unschedule(schedule_selector(GameLayer::onReducingBonus));
 
 		publishScore();
+
+		auto scene = GameOverLayer::createScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0, scene));
 
 	}
 
@@ -129,4 +140,54 @@ void GameLayer::addBonus(int bonus)
 	m_scorelabel->setString(buf);
 
 	m_bonusbar->setPercent(m_bonusbar->getPercent() + bonus);
+}
+
+//暂停游戏
+void GameLayer::menuPauseCallback(Ref* pSender)
+{
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+
+	//暂停当前层中的node
+	this->pause();
+
+	for (const auto&node : this->getChildren())
+	{
+		node->pause();
+	}
+
+	//返回主菜单
+	auto backNormal = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/back.png"));
+	auto backSelected = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/back-on.png"));
+	auto backMenuItem = MenuItemSprite::create(backNormal, backSelected,
+		CC_CALLBACK_1(GameLayer::menuBackCallback, this));
+
+	//继续游戏
+	auto resumeNormal = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/resume.png"));
+	auto resumeSelected = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/resume-on.png"));
+	auto resumeMenuItem = MenuItemSprite::create(resumeNormal, resumeSelected,
+		CC_CALLBACK_1(GameLayer::menuResumeCallback, this));
+
+	menu = Menu::create(backMenuItem, resumeMenuItem, NULL);
+	menu->alignItemsVertically();
+	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+
+	this->addChild(menu, 20);
+}
+
+//返回主菜单
+void GameLayer::menuBackCallback(Ref* pSender)
+{
+	Director::getInstance()->popScene();
+}
+
+//返回游戏
+void GameLayer::menuResumeCallback(Ref* pSender)
+{
+	this->resume();
+	for (const auto&node : this->getChildren())
+	{
+		node->resume();
+	}
+
+	this->removeChild(menu);
 }
